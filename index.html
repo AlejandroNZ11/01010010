@@ -549,10 +549,139 @@ html, body, #app {
   #riel button { padding: 5px 8px !important; font-size: 0.65rem !important; }
 }
 
+/* ================= PANTALLA DE SEGURIDAD ================= */
+#lockScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, #1a1206 0%, #070502 70%, #030201 100%);
+  padding: 6vw;
+}
+
+#lockScreen.oculto {
+  display: none;
+}
+
+.lock-card {
+  width: min(90vw, 380px);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,200,60,0.35);
+  border-radius: 24px;
+  padding: 32px 24px;
+  text-align: center;
+  box-shadow: 0 18px 45px rgba(0,0,0,0.65);
+  backdrop-filter: blur(8px);
+}
+
+.lock-emoji {
+  font-size: 46px;
+  margin-bottom: 10px;
+}
+
+.lock-title {
+  font-family: var(--mano);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 7vw, 2.2rem);
+  color: var(--oro-claro);
+  margin: 0 0 18px;
+  text-shadow: 0 0 18px rgba(255,200,60,0.55);
+}
+
+.lock-input {
+  width: 100%;
+  height: 50px;
+  border: 2px solid rgba(255,200,60,0.4);
+  border-radius: 40px;
+  background: rgba(0,0,0,0.35);
+  color: #fff;
+  text-align: center;
+  font-size: 1.15rem;
+  font-family: var(--sans);
+  outline: none;
+  margin-bottom: 16px;
+}
+
+.lock-input:focus {
+  border-color: var(--oro);
+}
+
+.lock-btn {
+  padding: 13px 30px;
+  border: none;
+  border-radius: 40px;
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: 1.05rem;
+  cursor: pointer;
+  color: #241500;
+  background: linear-gradient(140deg,#ffe58b,var(--oro) 52%,#eb9500);
+  box-shadow: 0 8px 22px rgba(255,160,20,0.45);
+}
+
+.lock-btn:active {
+  transform: scale(.96);
+}
+
+.lock-error {
+  margin-top: 14px;
+  min-height: 20px;
+  color: #ff8080;
+  font-weight: 400;
+  font-size: .95rem;
+}
+
+/* Overlay video error */
+#errorOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: #000;
+  padding: 5vw;
+}
+
+#errorOverlay.activo {
+  display: flex;
+}
+
+#errorVideo {
+  width: min(92vw, 500px);
+  max-height: 65vh;
+  border-radius: 14px;
+  object-fit: contain;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.7);
+}
 
 </style>
 </head>
 <body>
+
+<!-- ================= PANTALLA DE SEGURIDAD ================= -->
+<div id="lockScreen">
+  <div class="lock-card">
+    <div class="lock-emoji">🌻</div>
+    <h2 class="lock-title">Ingrese la Palabra Mágica</h2>
+    <input type="text" id="lockInput" class="lock-input" placeholder="Palabra mágica..." autocomplete="off">
+    <button id="lockBtn" class="lock-btn">Ingresar</button>
+    <p id="lockError" class="lock-error"></p>
+  </div>
+</div>
+
+<!-- Overlay del video de error -->
+<div id="errorOverlay">
+  <video id="errorVideo" playsinline loop preload="auto">
+    <source src="error.mp4" type="video/mp4">
+  </video>
+  <button id="btnReintentar" class="lock-btn">Reintentar palabra mágica</button>
+</div>
+
 <div id="app">
   <div id="cielo"><canvas id="estrellas"></canvas></div>
 
@@ -2092,6 +2221,73 @@ window.addEventListener("load", () => {
 // 2. REGISTRA LOS CLICS EN LA CELDA A2 (¡Corregido!)
 document.addEventListener("click", () => {
   enviarInteraccionSilenciosa("click"); // Ahora sí envía exactamente la orden "click"
+});
+
+/* ==================================================================
+   SEGURIDAD DE PALABRA MÁGICA + VIDEO error.mp4
+================================================================== */
+const PALABRA_MAGICA = "07122024";
+
+const lockScreen    = document.getElementById("lockScreen");
+const lockInput     = document.getElementById("lockInput");
+const lockBtn       = document.getElementById("lockBtn");
+const lockError     = document.getElementById("lockError");
+const errorOverlay  = document.getElementById("errorOverlay");
+const errorVideo    = document.getElementById("errorVideo");
+const btnReintentar = document.getElementById("btnReintentar");
+
+function iniciarExperienciaSegura() {
+  lockScreen.classList.add("oculto");
+  lockError.textContent = "";
+}
+
+function mostrarErrorSeguridad() {
+  errorOverlay.classList.add("activo");
+
+  try {
+    errorVideo.currentTime = 0;
+    errorVideo.muted = false;
+    errorVideo.volume = 1;
+    errorVideo.play().catch(() => {});
+  } catch(e) {}
+}
+
+function ocultarErrorSeguridad() {
+  errorOverlay.classList.remove("activo");
+
+  try {
+    errorVideo.pause();
+  } catch(e) {}
+}
+
+function validarPalabraSeguridad() {
+  const valor = String(lockInput.value || "").trim();
+
+  if (valor === PALABRA_MAGICA) {
+    iniciarExperienciaSegura();
+  } else {
+    lockError.textContent = "Palabra incorrecta…";
+    mostrarErrorSeguridad();
+  }
+}
+
+lockBtn.addEventListener("click", validarPalabraSeguridad);
+
+lockInput.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    validarPalabraSeguridad();
+  }
+});
+
+btnReintentar.addEventListener("click", () => {
+  ocultarErrorSeguridad();
+  lockInput.value = "";
+  lockInput.focus();
+});
+
+window.addEventListener("load", () => {
+  setTimeout(() => lockInput.focus(), 300);
 });
 
 </script>
