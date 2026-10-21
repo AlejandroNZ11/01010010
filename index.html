@@ -765,7 +765,7 @@ html, body, #app {
     </div>
     <div class="puntos" id="puntos"></div>
     <div class="fila" style="margin-top:12px">
-      <span class="pildora" id="contSecretos">0 de 21 secretos</span>
+      <span class="pildora" id="contSecretos">0 de 26 secretos</span>
       <button class="btn linea" id="btnFotos">Subir fotos</button>
       <button class="btn bloqueado" id="btnALaCarta">Hay una carta</button>
     </div>
@@ -1204,27 +1204,34 @@ const PIROPOS = [
 ];
 
 const SECRETOS = [
-  'No deberías estar leyendo esto… pero ya que llegaste, abre el siguiente.',
-  'Tranquila, esto recién comienza. Hay algo que todavía no sabes.',
-  'Este pequeño secreto tiene una destinataria. Y sí, eres tú.',
-  'Quizá todavía no sepas quién está detrás de todo esto.',
-  'Nos vemos más seguido de lo que imaginas, aunque casi nunca hablamos.',
-  'Quizá ya estés imaginando quién está detrás de esto.',
-  'Entre cajas, inventarios y pendientes, hay alguien que siempre termina llamando mi atención.',
-  'Entre códigos, cajas y pendientes, hay algo que no puedo automatizar.',
-  'Las ganas de conocerte un poquito más. Y tambien....',
-  'Nos falta compartir una conversación.',
-  'No sé si alguna vez lo notaste, pero tienes una sonrisa muy bonita.',
-  'No quiero arruinar el misterio, pero ya falta menos para descubrirlo.',
-  'Quizá ya tengas una sospecha. O quizá todavía no.',
-  'No fue un sistema automático el que preparó esto. Alguien pensó en ti.',
-  'Puede que el secreto no esté tan lejos como imaginas.',
-  'Tal vez este pequeño secreto sea el comienzo de algo que todavía no existe.',
-  'La persona que hizo esto, trabaja en el mismo almacén que tú.',
-  'Tal vez lo hayas visto pasar por el almacén más de una vez.',
-  'Y aunque todavía no hablamos mucho, me gustaría conocerte más.',
-  'Si llegaste hasta aquí, quizá ya sabes quién soy… o quizá te falta una última pista.',
-  'Soy yo, el programador del almacén. Feliz Día de las Flores Amarillas, ' + N + '. 🌻'
+  'No deberías estar leyendo esto… pero ahora que llegaste, ¿por qué no descubres el siguiente secreto? 👀',
+  'Tranquila, no es nada malo. Aunque debo advertirte algo: cada secreto te acercará un poquito más a la verdad. ✨',
+  'Este pequeño misterio tiene una destinataria especial. Y sí… eres tú. 🌻',
+  'Quizá todavía no sepas quién está detrás de estas palabras, pero alguien dedicó tiempo a prepararlas pensando en ti.',
+  'Nos vemos más seguido de lo que imaginas, aunque todavía no hayamos tenido la oportunidad de conversar mucho.',
+  'Tal vez ya estés intentando adivinar quién soy. Me pregunto si tu sospecha será correcta. 🤭',
+  'Entre cajas, inventarios y pendientes, hay alguien que, sin darse cuenta, terminó llamando mi atención.',
+  'Entre códigos, cajas y problemas por resolver, descubrí que hay algo que no puedo automatizar: lo que siento cuando te veo. 💛',
+  'Hay algo que me gustaría hacer desde hace un tiempo: encontrar una excusa para conocerte un poquito más.',
+  'Porque, aunque parezca sencillo, a veces lo más difícil no es resolver un problema… sino encontrar el valor para iniciar una conversación.',
+  'No sé si alguna vez lo notaste, pero tienes una sonrisa muy bonita. De esas que pueden alegrarle un poquito el día a alguien. 🌼',
+
+  'Y no, no estoy diciendo esto solo porque hoy sea el Día de las Flores Amarillas. Hay cosas que ya pensaba antes de preparar todo esto.',
+  'Quizá ya tengas una sospecha sobre quién está detrás de estas palabras. Si es así, tal vez estés más cerca de la respuesta de lo que imaginas.',
+  'Aunque soy programador y me gusta encontrar soluciones para todo, todavía no encuentro la forma perfecta de decir ciertas cosas en persona.',
+  'Por eso decidí crear algo diferente. Un pequeño detalle que pudiera expresar lo que quizá todavía no me atrevo a decirte frente a frente.',
+  'No espero que estas palabras cambien algo de repente. Solo quería regalarte un momento bonito y sacarte una sonrisa.',
+  'La persona que preparó esto trabaja en el mismo almacén que tú. Sí, alguien que probablemente hayas visto más de una vez. 👀',
+  'Tal vez me hayas visto caminando por el almacén, concentrado en la computadora o resolviendo algún pendiente.',
+  'Y aunque todavía nos falta compartir una buena conversación, me gustaría que algún día dejáramos de ser dos personas que solo coinciden en el trabajo.',
+  'Si llegaste hasta aquí, ya casi termina el misterio. Podría darte otra pista, pero creo que ha llegado el momento de hablar con sinceridad.',
+  'Soy yo, el programador del almacén. 🌻 Feliz Día de las Flores Amarillas, ' + N + '.',
+
+  'Y ahora sí, quiero decirte algo que he guardado durante un tiempo: me gustas. 💛',
+  'Me gusta tu sonrisa, me llamas la atención y me gustaría tener la oportunidad de conocerte más allá de los momentos en que coincidimos en el almacén.',
+  'No sé qué pienses tú ni qué pueda pasar después de esto, y no quiero que sientas ninguna presión. Simplemente quería ser sincero contigo y que supieras lo que siento.',
+  'Así que, si algún día te gustaría compartir una conversación conmigo, conocernos un poquito más y ver qué puede surgir, me haría mucha ilusión. 🌻',
+  'Por ahora, solo quería que lo supieras: detrás de todos estos códigos, pistas y secretos, hay alguien a quien le gustas tú. 💛'
 ];
 
 const VALES = [
@@ -1311,7 +1318,12 @@ pintarRiel(0);
 /* ==================================================================
    5 · INTRO: el nombre hecho de partículas
 ================================================================== */
-(function introNombre(){
+let introIniciada = false;
+
+function introNombre(){
+  if (introIniciada) return;
+  introIniciada = true;
+
   const cv=$('#lienzoNombre'), ctx=cv.getContext('2d');
   const dpr=Math.min(devicePixelRatio||1,2);
   let W,H,puntos=[],parts=[];
@@ -1339,9 +1351,9 @@ pintarRiel(0);
     tx:p[0], ty:p[1], v:0.018+Math.random()*0.03, r:.9+Math.random()*1.5,
     c:Math.random()>.7?'#fff3cf':'#ffc83c'
   }));
-  let t0=performance.now(), vivo=true;
+  let t0=performance.now();
   function dibujar(now){
-    if(!vivo || !document.getElementById('e1').classList.contains('on')) return;
+    if(!document.getElementById('e1').classList.contains('on')) return;
     const k=(now-t0)/1000;
     ctx.clearRect(0,0,W,H);
     for(const p of parts){
@@ -1354,7 +1366,6 @@ pintarRiel(0);
     requestAnimationFrame(dibujar);
   }
   requestAnimationFrame(dibujar);
-  addEventListener('resize',()=>{vivo=false;});
 
   (async()=>{
     await esperar(2200);
@@ -1363,8 +1374,9 @@ pintarRiel(0);
     const b=$('#empezar');
     b.style.transition='opacity .8s ease'; b.style.opacity='1'; b.style.pointerEvents='auto';
   })();
-})();
+}
 $('#empezar').addEventListener('click',()=>{ ir(1); arrancarAudioCtx(); });
+
 
 /* ==================================================================
    6 · EL MUÑECO Y SU MENSAJE DE VOZ
@@ -1915,9 +1927,10 @@ function abrirGal(i){
    9 · CARRUSEL
 ================================================================== */
 const carrusel=$('#carrusel'), puntosEl=$('#puntos');
+const TOTAL_SECRETOS = SECRETOS.length; // Detecta automáticamente los 26
 let tarjetas=[], activa=0, autoTimer=null;
 let secretos=0;
-$('#contSecretos').textContent=`${secretos} de 21 secretos`;
+$('#contSecretos').textContent=`${secretos} de ${TOTAL_SECRETOS} secretos`;
 
 PIROPOS.forEach((p,i)=>nuevaTarjeta({piropo:p,n:i+1}));
 nuevaTarjeta({sumar:true});
@@ -1927,12 +1940,12 @@ function nuevaTarjeta(d, alFrente){
   el.className='tarjeta'+(d.sumar?' sumar':'');
   if(d.sumar){
     el.innerHTML=`<div class="cerradura">🔒</div>
-      <p>Hay 21 mensajes escondidos. Cada foto que subas destapa uno.</p>
+      <p>Hay ${TOTAL_SECRETOS} mensajes escondidos. Cada foto que subas destapa uno.</p>
       <button class="btn linea chico" type="button">Subir una foto</button>`;
     el.querySelector('button').addEventListener('click',e=>{e.stopPropagation();$('#fileInput').click();});
   } else if(d.img){
     el.innerHTML=`<img src="${d.img}" alt="">
-      <div class="oculto"><small>MENSAJE SECRETO ${d.sec} DE 21</small>${d.texto}</div>`;
+      <div class="oculto"><small>MENSAJE SECRETO ${d.sec} DE ${TOTAL_SECRETOS}</small>${d.texto}</div>`;
   } else {
     el.innerHTML=`<div class="num">${d.n}</div><div class="piropo">${d.piropo}</div>`;
   }
@@ -1969,19 +1982,20 @@ carrusel.addEventListener('pointerup',e=>{
 });
 $('#btnFotos').addEventListener('click',()=>$('#fileInput').click());
 $('#fileInput').addEventListener('change',e=>{
-  const files=[...e.target.files].slice(0,21); // Límite subido a 21
+  const restantes = TOTAL_SECRETOS - secretos;
+  const files=[...e.target.files].slice(0, restantes > 0 ? restantes : TOTAL_SECRETOS);
   files.forEach(f=>{
-    const n=(secretos % SECRETOS.length);
+    const n=(secretos % TOTAL_SECRETOS);
     nuevaTarjeta({img:URL.createObjectURL(f), texto:SECRETOS[n], sec:secretos+1}, true);
-    secretos=Math.min(21, secretos+1); // Límite subido a 21
+    secretos=Math.min(TOTAL_SECRETOS, secretos+1);
   });
-  $('#contSecretos').textContent=`${secretos} de 21 secretos`;
+  $('#contSecretos').textContent=`${secretos} de ${TOTAL_SECRETOS} secretos`;
   
   if(files.length){
     activa=0; acomodar(); reiniciarAuto();
-    $('#pista5').textContent = secretos>=21
+    $('#pista5').textContent = secretos>=TOTAL_SECRETOS
       ? 'Los destapaste todos. No queda nada escondido.'
-      : `Destapaste ${secretos}. Faltan ${21-secretos}.`;
+      : `Destapaste ${secretos}. Faltan ${TOTAL_SECRETOS-secretos}.`;
   }
 
   // A las 5 fotos se "desbloquea" visualmente el botón y la pestaña de abajo
@@ -1995,29 +2009,29 @@ $('#fileInput').addEventListener('change',e=>{
 
 // Lógica del botón hacia la Carta
 $('#btnALaCarta').addEventListener('click', () => {
-  if (secretos >= 21) {
-    // Si ya tiene 21, pasa directo sin preguntar
+  if (secretos >= TOTAL_SECRETOS) {
+    // Si ya tiene los 26, pasa directo sin preguntar
     desbloquear(5);
     ir(5);
   } else {
-    // Si tiene menos de 21, calcula cuántos faltan y lanza la alerta
-    const faltan = 21 - secretos;
+    // Si tiene menos de 26, calcula cuántos faltan y lanza la alerta
+    const faltan = TOTAL_SECRETOS - secretos;
     $('#aMensaje').innerHTML = `Has descubierto ${secretos} secretos, pero te estás perdiendo <b>${faltan} mensajes ocultos</b> en tus fotos.<br><br>¿Seguro que quieres avanzar a la carta y perdértelos?`;
     $('#modalAlerta').classList.add('on');
   }
 });
 
-
 // Botones dentro de la alerta
 $('#aQuedarse').addEventListener('click', () => {
-  $('#modalAlerta').classList.remove('on'); // Cierra la alerta y se queda en las fotos
+  $('#modalAlerta').classList.remove('on');
 });
 
 $('#aAvanzar').addEventListener('click', () => {
-  $('#modalAlerta').classList.remove('on'); // Cierra la alerta
-  desbloquear(5); // Ilumina la pestaña de la Carta en la barra
-  ir(5); // Viaja a la escena de la Carta
+  $('#modalAlerta').classList.remove('on');
+  desbloquear(5);
+  ir(5);
 });
+
 
 /* ==================================================================
    10 · CARTA SELLADA
@@ -2237,9 +2251,16 @@ const errorVideo    = document.getElementById("errorVideo");
 const btnReintentar = document.getElementById("btnReintentar");
 
 function iniciarExperienciaSegura() {
+  lockInput.blur(); // Cierra el teclado en celulares antes de medir la pantalla
   lockScreen.classList.add("oculto");
   lockError.textContent = "";
+  
+  // Espera un instante a que se oculte el bloqueo y arranca la animación desde cero
+  setTimeout(() => {
+    introNombre();
+  }, 150);
 }
+
 
 function mostrarErrorSeguridad() {
   errorOverlay.classList.add("activo");
